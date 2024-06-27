@@ -1,0 +1,145 @@
+﻿<MahApps:MetroWindow  
+    
+        xmlns:MahApps="http://metro.mahapps.com/winfx/xaml/controls"
+        x:Class="SchnuppiDemoApp.WPF.MainWindow"      
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"      
+        xmlns:entities="clr-namespace:SchnuppiDemoApp.Entities;assembly=SchnuppiDemoApp.Entities" xmlns:viewmodels="clr-namespace:SchnuppiDemoApp.ViewModels;assembly=SchnuppiDemoApp.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+        mc:Ignorable="d"
+        Height="800" Width="1200">
+
+    <MahApps:MetroWindow.Resources>
+        <RoutedUICommand x:Key="CMD_MainView_Quit"/>
+        <RoutedUICommand x:Key="CMD_Search"/>
+        <RoutedUICommand x:Key="CMD_ZuCSVExportiern"/>
+        <RoutedUICommand x:Key="CMD_ZuExelExportieren"/>
+        <RoutedUICommand x:Key="CMD_BenutzerWechseln"/>
+        <RoutedUICommand x:Key="CMD_AktuelleZeileKopieren"/>
+        <RoutedUICommand x:Key="CMD_AllesKopieren"/>
+        <RoutedUICommand x:Key="CMD_InfoAnzeigen"/>
+    </MahApps:MetroWindow.Resources>
+
+    <MahApps:MetroWindow.CommandBindings>
+        <CommandBinding Command="{StaticResource CMD_MainView_Quit}" Executed="CMD_MainView_Quit_Executed" CanExecute="CMD_MainView_Quit_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_Search}" Executed="CMD_Search_Executed" CanExecute="CMD_Search_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_ZuCSVExportiern}" Executed="CMD_ZuCSVExportiern_Executed" CanExecute="CMD_ZuCSVExportiern_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_ZuExelExportieren}" Executed="CMD_ZuExelExportieren_Executed" CanExecute="CMD_ZuExelExportieren_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_BenutzerWechseln}" Executed="CMD_BenutzerWechseln_Executed" CanExecute="CMD_BenutzerWechseln_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_AktuelleZeileKopieren}" Executed="CMD_AktuelleZeileKopieren_Executed" CanExecute="CMD_AktuelleZeileKopieren_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_AllesKopieren}" Executed="CMD_AllesKopieren_Executed" CanExecute="CMD_AllesKopieren_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_ZuExelExportieren}" Executed="CMD_ZuExelExportieren_Executed" CanExecute="CMD_ZuExelExportieren_CanExecute"/>
+        <CommandBinding Command="{StaticResource CMD_InfoAnzeigen}" Executed="CMD_InfoAnzeigen_Executed" CanExecute="CMD_InfoAnzeigen_CanExecute"/>
+    </MahApps:MetroWindow.CommandBindings>
+    
+    <MahApps:MetroWindow.LeftWindowCommands>
+        <MahApps:WindowCommands>
+            
+            <Menu DockPanel.Dock="Top" Background="Transparent">
+                <MenuItem Header="Datei" Style="{DynamicResource WindowTitleMenuItemStyle}">
+                    <MenuItem Header="ZU CSV exportieren" Command="{StaticResource CMD_ZuCSVExportiern}">
+                    </MenuItem>
+                    <MenuItem Header="Zu Exel exportieren" Command="{StaticResource CMD_ZuExelExportieren}">
+                    </MenuItem>
+                    <MenuItem Header="Benutzer wechseln" Command="{StaticResource CMD_BenutzerWechseln}">
+                    </MenuItem>
+                    <MenuItem Header="Beenden" Command="{StaticResource CMD_MainView_Quit}">
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Bearbeiten" Style="{DynamicResource WindowTitleMenuItemStyle}">
+                    <MenuItem Header="Akt. Zeile kopieren" Command="{StaticResource CMD_AktuelleZeileKopieren }"/>
+                    <MenuItem Header="Alles kopieren" Command="{StaticResource CMD_AllesKopieren}"/>
+                </MenuItem>
+
+                <MenuItem Header="Hilfe" Style="{DynamicResource WindowTitleMenuItemStyle}">
+                    <MenuItem Header="Info" Command="{StaticResource CMD_InfoAnzeigen}">
+                    </MenuItem>
+                </MenuItem>
+                
+            </Menu>
+        </MahApps:WindowCommands>
+    </MahApps:MetroWindow.LeftWindowCommands>
+
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom" Name="sbar" VerticalAlignment="Bottom"   >
+            <StatusBarItem>
+                <TextBlock>DB Download</TextBlock>
+            </StatusBarItem>
+            <StatusBarItem>
+                <ProgressBar Width="100" Height="20" Name="progressBar1" >
+                    <ProgressBar.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="progressBar1" 
+                                                     Storyboard.TargetProperty="Value" 
+                                                     From="0" To="100" Duration="0:0:30" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ProgressBar.Triggers>
+                </ProgressBar>
+            </StatusBarItem>
+            <Separator/>
+            
+            <StatusBarItem>
+                <TextBlock x:Name="statusbar" Text="{Binding LoggedInUser.Name, UpdateSourceTrigger=PropertyChanged}"/>
+            </StatusBarItem>
+                        
+            <TextBlock Text="{Binding SearchResults.Count, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </StatusBar>
+        <GroupBox DockPanel.Dock="Top" Header="Filter" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">ProductionOrderNr</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SearchFilter.ProductionOrder}" MahApps:TextBoxHelper.ClearTextButton="True"/>
+
+                <Label Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right">ProduzentenNr</Label>
+                <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SearchFilter.ProducerNumber}" MahApps:TextBoxHelper.ClearTextButton="True"/>
+
+                <Label Grid.Row="0" Grid.Column="6" HorizontalAlignment="Right">Datum von</Label>
+                <DatePicker Grid.Row="0" Grid.Column="7" SelectedDate="{Binding SearchFilter.DateFrom}" MahApps:TextBoxHelper.ClearTextButton="True" />
+                <Label Grid.Row="1" Grid.Column="6" HorizontalAlignment="Right">Datum bis</Label>
+                <DatePicker Grid.Row="1" Grid.Column="7"  SelectedDate="{Binding SearchFilter.DateTo}" MahApps:TextBoxHelper.ClearTextButton="True"/>
+
+                <Button Grid.Column="8" Grid.Row="0" Grid.RowSpan="3" Command="{StaticResource CMD_Search}"  Content="Suchen"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Suchergebnisse" Margin="10">
+            <DataGrid x:Name="datagridhome" Margin="5" ItemsSource="{Binding SearchResults}"  AutoGenerateColumns="False"  
+                      SelectionMode="Single" IsReadOnly="False" CanUserAddRows="False" SelectedItem="{Binding SelectedRow}" 
+                      RowEditEnding="datagridhome_RowEditEnding">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Datum/Uhrzeit" Binding="{Binding TimeStamp, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Produktionsauftrag" Binding="{Binding ProductionOrderNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Produzent" Binding="{Binding ProducerNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Seriennummer" Binding="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Tester" Binding="{Binding TesterUserName, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Computer" Binding="{Binding MachineName, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+    </DockPanel>
+</MahApps:MetroWindow>
